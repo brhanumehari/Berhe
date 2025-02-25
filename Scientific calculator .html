@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Scientific Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .calculator {
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 300px;
+            overflow: hidden;
+        }
+
+        .display {
+            background-color: #fff;
+            padding: 20px;
+            text-align: right;
+            font-size: 24px;
+            color: #333;
+            border-bottom: 2px solid #444;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #666;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #888;
+        }
+
+        .operator, .scientific, .memory {
+            background-color: #ff9500;
+        }
+
+        .operator:hover, .scientific:hover, .memory:hover {
+            background-color: #e68a00;
+        }
+
+        .equals {
+            background-color: #4CAF50;
+            grid-column: span 2;
+        }
+
+        .equals:hover {
+            background-color: #45a049;
+        }
+
+        .clear {
+            background-color: #f44336;
+        }
+
+        .clear:hover {
+            background-color: #da190b;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="memory" onclick="memoryClear()">MC</button>
+            <button class="memory" onclick="memoryRecall()">MR</button>
+            <button class="memory" onclick="memoryAdd()">M+</button>
+            <button class="memory" onclick="memorySubtract()">M-</button>
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button onclick="append('(')">(</button>
+            <button onclick="append(')')">)</button>
+            <button class="scientific" onclick="calculate('sqrt')">√</button>
+            <button class="scientific" onclick="calculate('pow')">x²</button>
+            <button onclick="append('7')">7</button>
+            <button onclick="append('8')">8</button>
+            <button onclick="append('9')">9</button>
+            <button class="operator" onclick="append('/')">/</button>
+            <button class="scientific" onclick="calculate('sin')">sin</button>
+            <button onclick="append('4')">4</button>
+            <button onclick="append('5')">5</button>
+            <button onclick="append('6')">6</button>
+            <button class="operator" onclick="append('*')">×</button>
+            <button class="scientific" onclick="calculate('cos')">cos</button>
+            <button onclick="append('1')">1</button>
+            <button onclick="append('2')">2</button>
+            <button onclick="append('3')">3</button>
+            <button class="operator" onclick="append('-')">-</button>
+            <button class="scientific" onclick="calculate('tan')">tan</button>
+            <button onclick="append('0')">0</button>
+            <button onclick="append('.')">.</button>
+            <button class="scientific" onclick="calculate('log')">log</button>
+            <button class="operator" onclick="append('+')">+</button>
+            <button class="scientific" onclick="calculate('pi')">π</button>
+            <button class="scientific" onclick="calculate('e')">e</button>
+            <button class="scientific" onclick="calculate('1/x')">1/x</button>
+            <button class="equals" onclick="calculate('=')">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let current = '0';
+        let memory = 0;
+
+        function append(value) {
+            if (current === '0' && value !== '.') {
+                current = value;
+            } else {
+                current += value;
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            current = '0';
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            display.textContent = current;
+        }
+
+        function calculate(operation) {
+            try {
+                switch (operation) {
+                    case '=':
+                        current = eval(current).toString();
+                        break;
+                    case 'sqrt':
+                        current = Math.sqrt(eval(current)).toString();
+                        break;
+                    case 'pow':
+                        current = Math.pow(eval(current), 2).toString();
+                        break;
+                    case 'sin':
+                        current = Math.sin(eval(current) * Math.PI / 180).toString();
+                        break;
+                    case 'cos':
+                        current = Math.cos(eval(current) * Math.PI / 180).toString();
+                        break;
+                    case 'tan':
+                        current = Math.tan(eval(current) * Math.PI / 180).toString();
+                        break;
+                    case 'log':
+                        current = Math.log10(eval(current)).toString();
+                        break;
+                    case 'pi':
+                        current += Math.PI.toString();
+                        break;
+                    case 'e':
+                        current += Math.E.toString();
+                        break;
+                    case '1/x':
+                        current = (1 / eval(current)).toString();
+                        break;
+                    default:
+                        break;
+                }
+                updateDisplay();
+            } catch (e) {
+                current = 'Error';
+                updateDisplay();
+                setTimeout(clearDisplay, 1000);
+            }
+        }
+
+        function memoryClear() {
+            memory = 0;
+        }
+
+        function memoryRecall() {
+            current = memory.toString();
+            updateDisplay();
+        }
+
+        function memoryAdd() {
+            memory += eval(current);
+        }
+
+        function memorySubtract() {
+            memory -= eval(current);
+        }
+    </script>
+</body>
+</html>
